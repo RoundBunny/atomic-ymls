@@ -1,0 +1,18 @@
+title: Bash History
+id: T1552.003
+description: Search through bash history for specific commands we want to capture
+detection:
+  process_cat:
+    EventType: exec
+    ExecutablePath:
+      - '/bin/cat'
+    CommandLine|contains:
+      - '.zsh_history'
+  process_grep:
+    EventType: exec
+    ExecutablePath:
+      - '/usr/bin/grep'
+    CommandLine|contains:
+      - 'pass'
+      - 'ssh'
+  condition: 1 of process*

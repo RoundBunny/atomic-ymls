@@ -1,0 +1,39 @@
+title: Create or Modify System Process Launch Daemon
+id: T1543.004
+description: Utilize LaunchDaemon to launch Hello World
+source_commands:
+  - sudo cp atomicredteam_T1543_004.plist /Library/LaunchDaemons/com.atomicredteam.plist
+  - sudo launchctl load -w /Library/LaunchDaemons/com.atomicredteam.plist
+  - touch /tmp/T1543_004_atomicredteam.txt # inside plist
+detection:
+  process_cp:
+    EventType: exec
+    CommandLine|contains|all:
+      - cp
+      - atomicredteam_T1543_004.plist
+      - com.atomicredteam.plist
+
+  process_launchctl:
+    EventType: exec
+    CommandLine|contains|all:
+      - launchctl
+      - load
+      - '/Library/LaunchDaemons/com.atomicredteam.plist'
+
+  file_create1:
+    EventType: create
+    TargetPath: '/Library/LaunchDaemons/com.atomicredteam.plist'
+
+  process_touch:
+    EventType: exec
+    CommandLine|contains:
+      - touch
+      - '/tmp/T1543_004_atomicredteam.txt'
+
+  file_create2:
+    EventType:
+      - create
+      - open
+    TargetPath|contains: 'tmp/T1543_004_atomicredteam.txt'
+
+  condition: 1 of process* OR 1 of file*

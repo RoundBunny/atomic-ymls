@@ -1,0 +1,17 @@
+title: Linux and Mac File and Directory Permissions Modification
+id: T1222.002
+description: Changes a file or folder's permissions using chmod and a specified numeric mode.
+detection:
+  process_chown:
+    EventType: exec
+    ExecutablePath:
+      - '/usr/sbin/chown'
+    CommandLine|contains:
+      - 'testfile.txt'
+      - 'root'
+      - '-R'
+  file_chown:
+    EventType: chown
+    TargetPath|contains: 'testfile.txt'
+    uid: 0
+  condition: 1 of process* or 1 of file*

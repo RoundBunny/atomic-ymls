@@ -1,0 +1,24 @@
+title: Create or Modify System Process Launch Agent
+id: T1543.001
+description: Utilize LaunchAgent to make file in tmp
+detection:
+  process_cp:
+    EventType: exec
+    ExecutablePath: '/bin/cp'
+    CommandLine|contains:
+      - 'atomicredteam_T1543_001.plist'
+      - '~/Library/LaunchAgents'
+  process_launchctl:
+    EventType: exec
+    ExecutablePath: '/bin/launchctl'
+    CommandLine|contains:
+      - 'com.atomicredteam.plist'
+  process_touch:
+    EventType: exec
+    ExecutablePath: '/usr/bin/touch'
+    CommandLine|contains:
+      - '/tmp/T1543_001_atomicredteam.txt'
+  file_create:
+    EventType: create
+    TargetPath|contains: '/private/tmp/T1543_001_atomicredteam.txt'
+  condition: 1 of process* OR 1 of file*

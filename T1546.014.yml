@@ -1,0 +1,20 @@
+title: Emond
+id: T1546.014
+description: Adversaries may gain persistence and elevate privileges by executing malicious content triggered by the Event Monitor Daemon (emond). Emond is a [Launch Daemon](https://attack.mitre.org/techniques/T1543/004) that accepts events from various services, runs them through a simple rules engine, and takes action. The emond binary at /sbin/emond will load any rules from the /etc/emond.d/rules/ directory and take action once an explicitly defined event takes place.
+detection:
+  process_sudo:
+    EventType: exec
+    ExecutablePath: '/usr/bin/sudo'
+    CommandLine|contains:
+      - '/private/var/db/emondClients/T1546.014'
+  process_touch:
+    EventType: exec
+    ExecutablePath: '/usr/bin/touch'
+    CommandLine|contains:
+      - '/private/var/db/emondClients/T1546.014'
+  process_cp:
+    EventType: exec
+    ExecutablePath: '/bin/cp'
+    CommandLine|contains:
+      - '/private/var/db/emondClients/T1546.014'
+  condition: 1 of process*

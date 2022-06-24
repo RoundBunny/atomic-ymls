@@ -1,0 +1,34 @@
+title: Linux and Mac File and Directory Permissions Modification
+tid: T1222.002
+description: Changes a file or folder's permissions using chmod and a specified numeric mode.
+detection:
+  process_echo:
+    EventType: exec
+    CommandLine|contains:
+      - 'echo'
+      - '/tmp/encoded.dat'
+  file_create:
+    EventType: create
+    TargetPath: '/private/tmp/encoded.dat'
+  file_create2:
+    EventType: create
+    TargetPath: '/private/tmp/art.sh'
+  process_cat:
+    EventType: exec
+    ExecutablePath: '/bin/cat'
+    CommandLine|contains:
+      - '/tmp/encoded.dat'
+  process_base64:
+    EventType: exec
+    ExecutablePath: '/usr/bin/base64'
+    CommandLine|contains:
+      - 'base64'
+      - '-d'
+  process_chmod:
+    EventType: exec
+    ExecutablePath: '/bin/chmod'
+    CommandLine|contains:
+      - '/tmp/art.sh'
+      - '+x'
+  #should be one more for executing the shell script, but detection not working 6/23/22
+  condition: 1 of process* or 1 of file*

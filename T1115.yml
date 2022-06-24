@@ -1,0 +1,18 @@
+title: Linux and Mac File and Directory Permissions Modification
+tid: T1222.002
+description: Changes a file or folder's permissions using chmod and a specified numeric mode.
+detection:
+  selection_1:
+    EventType: exec
+    ExecutablePath:
+      - '/bin/chmod'
+    CommandLine|contains:
+      - 'a+w'
+      - 'testfile.txt'
+      - '-R'
+  selection_2:
+    EventType: chmod
+    TargetPath|contains: 'testfile.txt'
+    Mode:
+      - 384
+  condition: selection_1 and selection_2

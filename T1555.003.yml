@@ -1,0 +1,15 @@
+title: Search macOS Safari Cookies
+id: T1555.003
+description: This test uses grep to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.
+detection:
+  process_grep:
+    EventType: exec
+    ExecutablePath:
+      - '/usr/bin/grep'
+    CommandLine|contains:
+      - 'coinbase'
+      - 'Cookies.binarycookies'
+  file_open:
+    EventType: open
+    TargetPath|includes: 'Library/Cookies/Cookies.binarycookies'
+  condition: 1 of process* or 1 of file*

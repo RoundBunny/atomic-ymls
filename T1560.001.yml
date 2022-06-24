@@ -1,0 +1,15 @@
+title: Gzip
+id: T1560.001
+description: An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard gzip compression.
+detection:
+  process_gzip:
+    EventType: exec
+    ExecutablePath:
+      - '/usr/bin/gzip'
+    CommandLine|contains:
+      - '/tmp/'
+      - 'gzip'
+  file_open:
+    EventType: open
+    TargetPath: '/private/tmp/blah/test1.txt'
+  condition: 1 of process* or 1 of file*
